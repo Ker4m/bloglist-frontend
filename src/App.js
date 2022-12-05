@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 import Blog from "./components/Blog";
 import Notification from "./components/Notification";
+import BlogForm from "./components/blogForm";
 
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -12,10 +13,20 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
+
+  const [notifMessage, setNotifMessage] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
+  }, []);
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      blogService.setToken(user.token);
+    }
   }, []);
 
   const handleLogin = async (event) => {
@@ -26,15 +37,22 @@ const App = () => {
         username,
         password,
       });
+      window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
+      blogService.setToken(user.token);
       setUser(user);
       setUsername("");
       setPassword("");
     } catch (exception) {
-      setErrorMessage("Wrong credentials");
+      setNotifMessage({ type: "error", message: "Wrong username or password" });
       setTimeout(() => {
-        setErrorMessage(null);
+        setNotifMessage(null);
       }, 5000);
     }
+  };
+
+  const handleLogout = async (event) => {
+    window.localStorage.removeItem("loggedBlogappUser");
+    setUser(null);
   };
 
   const loginForm = () => (
@@ -66,7 +84,7 @@ const App = () => {
 
   const blogDisplay = () => (
     <>
-      <h2>blogs</h2>
+      <h2>Blog List</h2>
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
@@ -75,13 +93,17 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={errorMessage} />
+      <Notification info={notifMessage} />
 
       {user === null ? (
         loginForm()
       ) : (
         <div>
           <p>{user.name} logged-in</p>
+          <button type="submit" onClick={handleLogout}>
+            Log out
+          </button>
+          <BlogForm setBlogs={setBlogs} setNotifMessage={setNotifMessage} />
           {blogDisplay()}
         </div>
       )}
