@@ -45,18 +45,19 @@ const Blog = ({ blog, setNotifMessage, setBlogs, user }) => {
 
   return (
     <div style={{ border: '1px solid black', margin: '5px', padding: 2 }}>
-      <b>{blog.title}</b> by {blog.author}{' '}
+      <b className="blog-title">{blog.title}</b> by{' '}
+      <span className="blog-author">{blog.author}</span>
       {visible ? (
-        <button onClick={() => setVisible(false)}>Hide</button>
+        <button className="blog-hide-btn" onClick={() => setVisible(false)}>Hide</button>
       ) : (
-        <button onClick={() => setVisible(true)}>View</button>
+        <button className="blog-view-btn" onClick={() => setVisible(true)}>View</button>
       )}
       {visible && (
         <>
           <div>
-            <a href={blog.url}>{blog.url}</a>
+            <a className="blog-url" href={blog.url}>{blog.url}</a>
           </div>
-          <div>
+          <div className="blog-likes">
             Likes : {blog.likes}
             <button onClick={addLike}>+1</button>
           </div>
@@ -68,6 +69,7 @@ const Blog = ({ blog, setNotifMessage, setBlogs, user }) => {
                 color: 'white',
                 borderRadius: 3,
               }}
+              className="blog-del-btn"
               onClick={handleDelete}
             >
               Delete
