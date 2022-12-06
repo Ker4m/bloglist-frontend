@@ -1,7 +1,7 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 
-const Blog = ({ blog, setNotifMessage }) => {
+const Blog = ({ blog, setNotifMessage, setBlogs }) => {
   const [visible, setVisible] = useState(false);
 
   const addLike = () => {
@@ -12,8 +12,10 @@ const Blog = ({ blog, setNotifMessage }) => {
       author: blog.author,
       likes: blog.likes + 1,
     };
-    blogService.update(blog.id, updatedBlog).then((returnedBlog) => {
-      blog.likes = returnedBlog.likes;
+    blogService.update(blog.id, updatedBlog).then(() => {
+      blogService
+        .getAll()
+        .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
       setNotifMessage({
         type: "notif",
         message: `You liked the blog: ${blog.title} by ${blog.author}.`,

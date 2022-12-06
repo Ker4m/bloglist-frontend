@@ -21,7 +21,9 @@ const App = () => {
   const [notifMessage, setNotifMessage] = useState(null);
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    blogService
+      .getAll()
+      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
   }, []);
 
   useEffect(() => {
@@ -90,7 +92,12 @@ const App = () => {
     <>
       <h2>Blog List</h2>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} setNotifMessage={setNotifMessage} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          setNotifMessage={setNotifMessage}
+          setBlogs={setBlogs}
+        />
       ))}
     </>
   );
