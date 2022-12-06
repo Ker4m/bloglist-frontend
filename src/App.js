@@ -127,6 +127,26 @@ const App = () => {
     }
   }
 
+  const handleNewBlog = ({ title, author, url }, event) => {
+    event.preventDefault()
+    const newBlog = {
+      title: title,
+      author: author,
+      url: url,
+    }
+
+    blogService.create(newBlog).then((returnedBlog) => {
+      setBlogs((prev) => prev.concat(returnedBlog))
+      setNotifMessage({
+        type: 'notif',
+        message: `A new blog: ${title} by ${author} has been added.`,
+      })
+      setTimeout(() => {
+        setNotifMessage(null)
+      }, 5000)
+    })
+  }
+
   const blogDisplay = () => (
     <>
       <h2>Blog List</h2>
@@ -154,13 +174,12 @@ const App = () => {
           <button onClick={handleLogout}>Log out</button>
           <div style={showWhenVisible}>
             <BlogForm
-              setBlogs={setBlogs}
-              setNotifMessage={setNotifMessage}
+              handleNewBlog={handleNewBlog}
               setNewBlogVisible={setNewBlogVisible}
             />
           </div>
           <div style={hideWhenVisible}>
-            <button onClick={() => setNewBlogVisible(true)}>New blog</button>
+            <button className="show-blog-form" onClick={() => setNewBlogVisible(true)}>New blog</button>
           </div>
 
           {blogDisplay()}
