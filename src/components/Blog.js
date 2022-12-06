@@ -1,47 +1,7 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 
-const Blog = ({ blog, setNotifMessage, setBlogs, user }) => {
+const Blog = ({ blog, handleLike, handleDelete, user }) => {
   const [visible, setVisible] = useState(false)
-
-  const addLike = () => {
-    const updatedBlog = {
-      user: blog.user.id,
-      title: blog.title,
-      url: blog.url,
-      author: blog.author,
-      likes: blog.likes + 1,
-    }
-    blogService.update(blog.id, updatedBlog).then(() => {
-      blogService
-        .getAll()
-        .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
-      setNotifMessage({
-        type: 'notif',
-        message: `You liked the blog: ${blog.title} by ${blog.author}.`,
-      })
-      setTimeout(() => {
-        setNotifMessage(null)
-      }, 5000)
-    })
-  }
-
-  const handleDelete = () => {
-    if (window.confirm(`Remove the blog: ${blog.title} by ${blog.author}`)) {
-      blogService.remove(blog.id).then(() => {
-        blogService
-          .getAll()
-          .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
-        setNotifMessage({
-          type: 'notif',
-          message: `${blog.title} by ${blog.author} has been successfully deleted.`,
-        })
-        setTimeout(() => {
-          setNotifMessage(null)
-        }, 5000)
-      })
-    }
-  }
 
   return (
     <div style={{ border: '1px solid black', margin: '5px', padding: 2 }}>
@@ -59,7 +19,7 @@ const Blog = ({ blog, setNotifMessage, setBlogs, user }) => {
           </div>
           <div className="blog-likes">
             Likes : {blog.likes}
-            <button onClick={addLike}>+1</button>
+            <button className="blog-like-btn" onClick={() => handleLike(blog)}>+1</button>
           </div>
           <div>{blog.user.name}</div>
           {user.username === blog.user.username && (
@@ -70,7 +30,7 @@ const Blog = ({ blog, setNotifMessage, setBlogs, user }) => {
                 borderRadius: 3,
               }}
               className="blog-del-btn"
-              onClick={handleDelete}
+              onClick={() => handleDelete(blog)}
             >
               Delete
             </button>

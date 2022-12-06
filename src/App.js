@@ -88,6 +88,45 @@ const App = () => {
     </div>
   )
 
+  const handleLike = (blog) => {
+    const updatedBlog = {
+      user: blog.user.id,
+      title: blog.title,
+      url: blog.url,
+      author: blog.author,
+      likes: blog.likes + 1,
+    }
+    blogService.update(blog.id, updatedBlog).then(() => {
+      blogService
+        .getAll()
+        .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
+      setNotifMessage({
+        type: 'notif',
+        message: `You liked the blog: ${blog.title} by ${blog.author}.`,
+      })
+      setTimeout(() => {
+        setNotifMessage(null)
+      }, 5000)
+    })
+  }
+
+  const handleDelete = (blog) => {
+    if (window.confirm(`Remove the blog: ${blog.title} by ${blog.author}`)) {
+      blogService.remove(blog.id).then(() => {
+        blogService
+          .getAll()
+          .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
+        setNotifMessage({
+          type: 'notif',
+          message: `${blog.title} by ${blog.author} has been successfully deleted.`,
+        })
+        setTimeout(() => {
+          setNotifMessage(null)
+        }, 5000)
+      })
+    }
+  }
+
   const blogDisplay = () => (
     <>
       <h2>Blog List</h2>
@@ -95,8 +134,8 @@ const App = () => {
         <Blog
           key={blog.id}
           blog={blog}
-          setNotifMessage={setNotifMessage}
-          setBlogs={setBlogs}
+          handleDelete={handleDelete}
+          handleLike={handleLike}
           user={user}
         />
       ))}
