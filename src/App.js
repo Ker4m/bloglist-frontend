@@ -10,6 +10,10 @@ import loginService from "./services/login";
 const App = () => {
   const [blogs, setBlogs] = useState([]);
 
+  const [newBlogVisible, setNewBlogVisible] = useState(false);
+  const hideWhenVisible = { display: newBlogVisible ? "none" : "" };
+  const showWhenVisible = { display: newBlogVisible ? "" : "none" };
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -100,10 +104,18 @@ const App = () => {
       ) : (
         <div>
           <p>{user.name} logged-in</p>
-          <button type="submit" onClick={handleLogout}>
-            Log out
-          </button>
-          <BlogForm setBlogs={setBlogs} setNotifMessage={setNotifMessage} />
+          <button onClick={handleLogout}>Log out</button>
+          <div style={showWhenVisible}>
+            <BlogForm
+              setBlogs={setBlogs}
+              setNotifMessage={setNotifMessage}
+              setNewBlogVisible={setNewBlogVisible}
+            />
+          </div>
+          <div style={hideWhenVisible}>
+            <button onClick={() => setNewBlogVisible(true)}>New blog</button>
+          </div>
+
           {blogDisplay()}
         </div>
       )}

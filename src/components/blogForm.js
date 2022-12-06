@@ -2,7 +2,7 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 
-const BlogForm = ({ setBlogs, setNotifMessage }) => {
+const BlogForm = ({ setBlogs, setNotifMessage, setNewBlogVisible }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
@@ -46,6 +46,7 @@ const BlogForm = ({ setBlogs, setNotifMessage }) => {
         <input value={url} onChange={(e) => setUrl(e.target.value)} />
       </div>
       <button type="submit">Add</button>
+      <button onClick={() => setNewBlogVisible(false)}>Cancel</button>
     </form>
   );
 };
