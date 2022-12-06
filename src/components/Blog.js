@@ -1,8 +1,8 @@
-import { useState } from "react";
-import blogService from "../services/blogs";
+import { useState } from 'react'
+import blogService from '../services/blogs'
 
 const Blog = ({ blog, setNotifMessage, setBlogs, user }) => {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false)
 
   const addLike = () => {
     const updatedBlog = {
@@ -11,41 +11,41 @@ const Blog = ({ blog, setNotifMessage, setBlogs, user }) => {
       url: blog.url,
       author: blog.author,
       likes: blog.likes + 1,
-    };
+    }
     blogService.update(blog.id, updatedBlog).then(() => {
       blogService
         .getAll()
-        .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
+        .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
       setNotifMessage({
-        type: "notif",
+        type: 'notif',
         message: `You liked the blog: ${blog.title} by ${blog.author}.`,
-      });
+      })
       setTimeout(() => {
-        setNotifMessage(null);
-      }, 5000);
-    });
-  };
+        setNotifMessage(null)
+      }, 5000)
+    })
+  }
 
   const handleDelete = () => {
     if (window.confirm(`Remove the blog: ${blog.title} by ${blog.author}`)) {
       blogService.remove(blog.id).then(() => {
         blogService
           .getAll()
-          .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
+          .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
         setNotifMessage({
-          type: "notif",
+          type: 'notif',
           message: `${blog.title} by ${blog.author} has been successfully deleted.`,
-        });
+        })
         setTimeout(() => {
-          setNotifMessage(null);
-        }, 5000);
-      });
+          setNotifMessage(null)
+        }, 5000)
+      })
     }
-  };
+  }
 
   return (
-    <div style={{ border: "1px solid black", margin: "5px", padding: 2 }}>
-      <b>{blog.title}</b> by {blog.author}{" "}
+    <div style={{ border: '1px solid black', margin: '5px', padding: 2 }}>
+      <b>{blog.title}</b> by {blog.author}{' '}
       {visible ? (
         <button onClick={() => setVisible(false)}>Hide</button>
       ) : (
@@ -64,8 +64,8 @@ const Blog = ({ blog, setNotifMessage, setBlogs, user }) => {
           {user.username === blog.user.username && (
             <button
               style={{
-                backgroundColor: "crimson",
-                color: "white",
+                backgroundColor: 'crimson',
+                color: 'white',
                 borderRadius: 3,
               }}
               onClick={handleDelete}
@@ -76,7 +76,7 @@ const Blog = ({ blog, setNotifMessage, setBlogs, user }) => {
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Blog;
+export default Blog

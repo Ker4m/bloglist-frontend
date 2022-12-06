@@ -1,34 +1,34 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import { useState } from "react";
-import blogService from "../services/blogs";
+import { useState } from 'react'
+import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
 const BlogForm = ({ setBlogs, setNotifMessage, setNewBlogVisible }) => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   const addBlog = (event) => {
-    event.preventDefault();
+    event.preventDefault()
     const newBlog = {
       title: title,
       author: author,
       url: url,
-    };
+    }
 
     blogService.create(newBlog).then((returnedBlog) => {
-      setBlogs((prev) => prev.concat(returnedBlog));
-      setTitle("");
-      setAuthor("");
-      setUrl("");
+      setBlogs((prev) => prev.concat(returnedBlog))
+      setTitle('')
+      setAuthor('')
+      setUrl('')
       setNotifMessage({
-        type: "notif",
+        type: 'notif',
         message: `A new blog: ${title} by ${author} has been added.`,
-      });
+      })
       setTimeout(() => {
-        setNotifMessage(null);
-      }, 5000);
-    });
-  };
+        setNotifMessage(null)
+      }, 5000)
+    })
+  }
 
   return (
     <form onSubmit={addBlog}>
@@ -46,9 +46,15 @@ const BlogForm = ({ setBlogs, setNotifMessage, setNewBlogVisible }) => {
         <input value={url} onChange={(e) => setUrl(e.target.value)} />
       </div>
       <button type="submit">Add</button>
-      <button onClick={() => setNewBlogVisible(false)}>Cancel</button>
+      <button type="reset" onClick={() => setNewBlogVisible(false)}>Cancel</button>
     </form>
-  );
-};
+  )
+}
 
-export default BlogForm;
+BlogForm.propTypes = {
+  setBlogs: PropTypes.func.isRequired,
+  setNotifMessage: PropTypes.func.isRequired,
+  setNewBlogVisible: PropTypes.func.isRequired,
+}
+
+export default BlogForm
