@@ -56,7 +56,7 @@ const App = () => {
     }
   };
 
-  const handleLogout = async (event) => {
+  const handleLogout = async () => {
     window.localStorage.removeItem("loggedBlogappUser");
     setUser(null);
   };
@@ -97,6 +97,7 @@ const App = () => {
           blog={blog}
           setNotifMessage={setNotifMessage}
           setBlogs={setBlogs}
+          user={user}
         />
       ))}
     </>

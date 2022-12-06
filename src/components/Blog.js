@@ -1,7 +1,7 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 
-const Blog = ({ blog, setNotifMessage, setBlogs }) => {
+const Blog = ({ blog, setNotifMessage, setBlogs, user }) => {
   const [visible, setVisible] = useState(false);
 
   const addLike = () => {
@@ -26,9 +26,31 @@ const Blog = ({ blog, setNotifMessage, setBlogs }) => {
     });
   };
 
+  const handleDelete = () => {
+    if (window.confirm(`Remove the blog: ${blog.title} by ${blog.author}`)) {
+      blogService.remove(blog.id).then(() => {
+        blogService
+          .getAll()
+          .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
+        setNotifMessage({
+          type: "notif",
+          message: `${blog.title} by ${blog.author} has been successfully deleted.`,
+        });
+        setTimeout(() => {
+          setNotifMessage(null);
+        }, 5000);
+      });
+    }
+  };
+
   return (
     <div style={{ border: "1px solid black", margin: "5px", padding: 2 }}>
-      <b>{blog.title}</b> by {blog.author}
+      <b>{blog.title}</b> by {blog.author}{" "}
+      {visible ? (
+        <button onClick={() => setVisible(false)}>Hide</button>
+      ) : (
+        <button onClick={() => setVisible(true)}>View</button>
+      )}
       {visible && (
         <>
           <div>
@@ -39,12 +61,19 @@ const Blog = ({ blog, setNotifMessage, setBlogs }) => {
             <button onClick={addLike}>+1</button>
           </div>
           <div>{blog.user.name}</div>
+          {user.username === blog.user.username && (
+            <button
+              style={{
+                backgroundColor: "crimson",
+                color: "white",
+                borderRadius: 3,
+              }}
+              onClick={handleDelete}
+            >
+              Delete
+            </button>
+          )}
         </>
-      )}
-      {visible ? (
-        <button onClick={() => setVisible(false)}>Hide</button>
-      ) : (
-        <button onClick={() => setVisible(true)}>View</button>
       )}
     </div>
   );
