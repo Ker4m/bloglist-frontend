@@ -1,8 +1,29 @@
 import { useState } from "react";
+import blogService from "../services/blogs";
 
-const Blog = ({ blog }) => {
-  console.log(blog);
+const Blog = ({ blog, setNotifMessage }) => {
   const [visible, setVisible] = useState(false);
+
+  const addLike = () => {
+    const updatedBlog = {
+      user: blog.user.id,
+      title: blog.title,
+      url: blog.url,
+      author: blog.author,
+      likes: blog.likes + 1,
+    };
+    blogService.update(blog.id, updatedBlog).then((returnedBlog) => {
+      blog.likes = returnedBlog.likes;
+      setNotifMessage({
+        type: "notif",
+        message: `You liked the blog: ${blog.title} by ${blog.author}.`,
+      });
+      setTimeout(() => {
+        setNotifMessage(null);
+      }, 5000);
+    });
+  };
+
   return (
     <div style={{ border: "1px solid black", margin: "5px", padding: 2 }}>
       <b>{blog.title}</b> by {blog.author}
@@ -13,7 +34,7 @@ const Blog = ({ blog }) => {
           </div>
           <div>
             Likes : {blog.likes}
-            <button>+1</button>
+            <button onClick={addLike}>+1</button>
           </div>
           <div>{blog.user.name}</div>
         </>
