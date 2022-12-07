@@ -81,6 +81,38 @@ describe('Blog app', function() {
         cy.get('html').should('not.contain', 'Blog Test by Cypress')
       })
     })
+    it('Blogs are ordered according to likes', function() {
+      cy.createBlog({
+        title: 'Blog 4',
+        author: 'Cypress1',
+        url: 'https://www.example.com/blog',
+      })
+      cy.createBlog({
+        title: 'Blog 1',
+        author: 'Cypress2',
+        url: 'https://www.example.com/blog',
+        likes: 99
+      })
+      cy.createBlog({
+        title: 'Blog 3',
+        author: 'Cypress3',
+        url: 'https://www.example.com/blog',
+        likes: 35
+      })
+      cy.createBlog({
+        title: 'Blog 2',
+        author: 'Cypress4',
+        url: 'https://www.example.com/blog',
+        likes: 76
+      })
+
+      cy.get('#blog-list').eq(0).should('contain', 'Blog 1 by Cypress2')
+      cy.get('#blog-list').eq(0).should('contain', 'Blog 2 by Cypress4')
+      cy.get('#blog-list').eq(0).should('contain', 'Blog 3 by Cypress3')
+      cy.get('#blog-list').eq(0).should('contain', 'Blog 4 by Cypress1')
+
+    })
+
   })
 
 })

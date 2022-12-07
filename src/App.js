@@ -154,15 +154,17 @@ const App = () => {
   const blogDisplay = () => (
     <>
       <h2>Blog List</h2>
-      {blogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          handleDelete={handleDelete}
-          handleLike={handleLike}
-          user={user}
-        />
-      ))}
+      <div id="blog-list">
+        {blogs.map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            handleDelete={handleDelete}
+            handleLike={handleLike}
+            user={user}
+          />
+        ))}
+      </div>
     </>
   )
 

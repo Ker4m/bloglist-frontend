@@ -12,7 +12,6 @@ const getAll = () => {
     headers: { Authorization: token },
   }
   const request = axios.get(baseUrl, config)
-  console.log(request)
   return request.then((response) => response.data)
 }
 
