@@ -164,6 +164,7 @@ const App = () => {
 
   return (
     <div>
+      <h1>Blog App</h1>
       <Notification info={notifMessage} />
 
       {user === null ? (
