@@ -21,10 +21,12 @@ const App = () => {
   const [notifMessage, setNotifMessage] = useState(null)
 
   useEffect(() => {
-    blogService
-      .getAll()
-      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
-  }, [])
+    if(user){
+      blogService
+        .getAll()
+        .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
+    }
+  }, [user])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
